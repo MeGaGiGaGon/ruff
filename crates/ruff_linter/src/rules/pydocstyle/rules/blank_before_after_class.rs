@@ -181,12 +181,14 @@ pub(crate) fn blank_before_after_class(checker: &Checker, docstring: &Docstring)
 
         let mut blank_lines_before = 0usize;
         let mut blank_lines_start = lines.next().map(|line| line.start()).unwrap_or_default();
+        let mut start_is_line_continuation = false;
 
         for line in lines {
             if line.trim().is_empty() {
                 blank_lines_before += 1;
                 blank_lines_start = line.start();
             } else {
+                start_is_line_continuation = line.ends_with('\\');
                 break;
             }
         }
@@ -195,11 +197,14 @@ pub(crate) fn blank_before_after_class(checker: &Checker, docstring: &Docstring)
             if blank_lines_before != 0 {
                 let mut diagnostic =
                     checker.report_diagnostic(BlankLineBeforeClass, docstring.range());
-                // Delete the blank line before the class.
-                diagnostic.set_fix(Fix::safe_edit(Edit::deletion(
-                    blank_lines_start,
-                    docstring.line_start(),
-                )));
+                // Do not offer fix if a \ would cause it to be a syntax error
+                if !start_is_line_continuation {
+                    // Delete the blank line before the class.
+                    diagnostic.set_fix(Fix::safe_edit(Edit::deletion(
+                        blank_lines_start,
+                        docstring.line_start(),
+                    )));
+                }
             }
         }
         if checker.is_rule_enabled(Rule::IncorrectBlankLineBeforeClass) {

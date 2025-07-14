@@ -729,3 +729,11 @@ def line_continuation_chars():\
     """No fix should be offered for D201/D202 because of the line continuation chars."""\
 
     ...
+
+
+class LineContinuationBefore:\
+
+    """No fix should be offered for D211 because of the line continuation char."""
+
+    ...
+
