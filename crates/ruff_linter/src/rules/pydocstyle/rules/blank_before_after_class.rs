@@ -7,7 +7,7 @@ use ruff_text_size::TextRange;
 use crate::checkers::ast::Checker;
 use crate::docstrings::Docstring;
 use crate::registry::Rule;
-use crate::{AlwaysFixableViolation, Edit, Fix};
+use crate::{AlwaysFixableViolation, Edit, Fix, FixAvailability, Violation};
 
 /// ## What it does
 /// Checks for docstrings on class definitions that are not preceded by a
@@ -144,14 +144,16 @@ impl AlwaysFixableViolation for IncorrectBlankLineAfterClass {
 #[derive(ViolationMetadata)]
 pub(crate) struct BlankLineBeforeClass;
 
-impl AlwaysFixableViolation for BlankLineBeforeClass {
+impl Violation for BlankLineBeforeClass {
+    const FIX_AVAILABILITY: FixAvailability = FixAvailability::Sometimes;
+
     #[derive_message_formats]
     fn message(&self) -> String {
         "No blank lines allowed before class docstring".to_string()
     }
 
-    fn fix_title(&self) -> String {
-        "Remove blank line(s) before class docstring".to_string()
+    fn fix_title(&self) -> Option<String> {
+        Some("Remove blank line(s) before class docstring".to_string())
     }
 }
 

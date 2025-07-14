@@ -36,4 +36,15 @@ D.py:181:5: D211 [*] No blank lines allowed before class docstring
 180     |-
 181 180 |     """TrailingSpace."""
 182 181 |     pass
-183 182 |
+183 182 | 
+
+D.py:736:5: D211 No blank lines allowed before class docstring
+    |
+734 | class LineContinuationBefore:\
+735 |
+736 |     """No fix should be offered for D211 because of the line continuation char."""
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ D211
+737 |
+738 |     ...
+    |
+    = help: Remove blank line(s) before class docstring
